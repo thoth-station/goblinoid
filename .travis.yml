@@ -1,0 +1,13 @@
+language: python
+python:
+- '3.6'
+script: true
+deploy:
+  provider: pypi
+  user: fridex
+  password:
+    secure: Wh/8YXnoJw7xpx73s4ReRuNsUCdaKei2gl4o6c9TyBM+4azG1HtVScmhQgJtPCqiTcAp+dRMuK8y1IlLpsAR61Rzbt3f0HQRGmrhstA6fytxd7AB4ZnrsflzGYH1aUmvbSOpzhtlGY9VCCiVwdE8bjSFGiWTL31673363iGF9kMdcpmrjCDWEAo+aSzy7cL0i1qDm7xCdBxBZUNsUlNpnetQA9tq0QZpZypuCdSOTYgwPHRReNwW3YFSriiL5E7yMxl1bhs6nS1B48XDkDDOiFgRa7vfxcnG9Zhk1hevbaMhGZSROYHGAngAJtzUD1vNdRffrTjREB9/M5ZVFXF2GSZKIPGBzwIU46s2hbj6yCdREA0e/NqO577Ig8i3O7Tcca9g0dvwJBsVjqQyJs2kay4hVYlFNbSzfwLPejW6jT0njorD9qTUj/9aiyQVW6HSOLpMRGbAvpd78gDBiWgBUyWdxB2vBoxpAr6awDWpBkgUeKYj9doWeAnBAIZ/RuDeDG7lqH8tcdY6m87D4K/SJnhX1r0i6nWBWzDeffBJ/SmX9eJnY7st1d9kT19hOQMI+CIFKHaNTKPoFZQASTcvEyHCOooj6lOqYKQRzFZ3auMnmLHMmoP5jeNAmWgJIKEYA8THehg/bIpk+2JjUVyRc1Qb2pnvwbkVlKXHFd+8C5I=
+  on:
+    tags: true
+    branch: master
+  distributions: sdist bdist_wheel
