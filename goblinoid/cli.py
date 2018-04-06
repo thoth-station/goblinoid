@@ -30,17 +30,17 @@ def _print_version(ctx, _, value):
 @click.option('--version', is_flag=True, is_eager=True, callback=_print_version, expose_value=False,
               help="Print Goblinoid version and exit.")
 @click.option('--module-import', '-m', type=str, required=True,
-              help="TODO")
+              help="Python's import specification to a package/module from where models iterable should be imported.")
 @click.option('--models-iterable', '-i', type=str, required=True,
-              help="TODO")
+              help="A name of iterable that holds all models defined.")
 @click.option('--schema-file', type=click.File(mode='w'), required=False,
               default='./schema.groovy', show_default=True,
-              help="TODO")
+              help="Define a name and path of the resulting schema.")
 @click.option('--indexes-file', type=click.File(mode='w'), required=False,
               default='./indexes.groovy', show_default=True,
-              help="TODO")
+              help="Define a name and path of the resulting index definitions.")
 def cli(ctx=None, verbose=0, module_import=None, models_iterable=None, schema_file=None, indexes_file=None):
-    """Thoth solver command line interface."""
+    """Create graph database schema and indexes automatically from source code."""
     if ctx:
         ctx.auto_envvar_prefix = 'GOBLINOID'
 
