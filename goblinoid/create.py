@@ -37,7 +37,8 @@ _SUPPORTED_PROPERTY_TYPES = {
 }
 
 
-def _get_property_type(property_instance: typing.Union[VertexProperty, Property]):
+def _get_property_type(property_instance: typing.Union[VertexProperty, Property]) -> str:
+    """Get type of property based on classes defined in Goblin."""
     type_str = _SUPPORTED_PROPERTY_TYPES.get(property_instance.data_type.__class__.__name__)
     if type_str is None:
         raise UnsupportedPropertyType(f"Property type {type(property_instance.data_type)} is "
@@ -58,8 +59,22 @@ def _get_property_cardinality(property_instance: Cardinality) -> str:
         raise UnsupportedPropertyCardinality(f"Cardinality type {type(property_instance.cardinality)} is not supported")
 
 
-def create_schema(module_import: str, models_iterable: str, output_file: str) -> None:
+def create_schema(module_import: str, models_iterable: str, output_file: str,
+                  remove_schema_maker: bool=True, schema_vertex_identifier: str=None) -> None:
+    """Create a graph database schema.
+
+    :param module_import:
+    :param models_iterable:
+    :param output_file:
+    :param remove_schema_maker:
+    :param schema_vertex_identifier:
+    :return:
+    """
     iterable = get_iterable_from_module(module_import, models_iterable)
+    # TODO: edge cardinality
+    # TODO: edge label multiplicity
+    # TODO: remove_schema_maker
+    # TODO: schema_vertex_identifier
 
     with open(output_file, 'w') as output:
         output.write("mgmt = graph.openManagement()\n\n")
@@ -84,7 +99,6 @@ def create_schema(module_import: str, models_iterable: str, output_file: str) ->
                 db_name = property_instance.getdb_name() or property_name
                 property_type = _get_property_type(property_instance)
 
-                # TODO: check that we are not using Property on Vertexes but rather VertexProperty
                 if isinstance(property_instance, VertexProperty):
                     if not issubclass(model_class, Vertex):
                         raise WrongPropertyType(f"Property {property_name!r} in {model_class} is of "
@@ -112,7 +126,14 @@ def create_schema(module_import: str, models_iterable: str, output_file: str) ->
         output.write("mgmt.commit()\n")
 
 
-def create_indexes(module_import: str, models_iterable: str, output_file: str):
-    pass
+def create_indexes(module_import: str, indexes_iterable: str, output_file: str):
+    """Create graph database indexes.
+
+    :param module_import:
+    :param indexes_iterable:
+    :param output_file:
+    :return:
+    """
     # TODO: implement
-    # iterable = get_iterable_from_module(module_import, models_iterable)
+    # http://docs.janusgraph.org/0.2.0/indexes.html
+    # iterable = get_iterable_from_module(module_import, indexes_iterable)
