@@ -27,3 +27,11 @@ class UnsupportedPropertyCardinality(GoblinoidExceptionBase):
 
 class WrongPropertyType(GoblinoidExceptionBase):
     """Raised when wrong property type is used for an element."""
+
+
+class PropertyNameClashError(GoblinoidExceptionBase):
+    """Raised if a same property name is used for edge and vertex at the same time."""
+
+
+class MultipleLabelsError(GoblinoidExceptionBase):
+    """Raised if multiple labels with a same name found."""
