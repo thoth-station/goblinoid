@@ -5,8 +5,6 @@ Convert `Goblin <https://github.com/davebshow/goblin>`_ OGM to JanusGraph schema
 
 This tool provides an automated way to keep your graph database schema in sync with `Goblin <https://github.com/davebshow/goblin>`_ OGM (Object Graph Mapper). Once you define your schema using Goblin's Vertex and Edge classes you can simply pass sources to Goblinoid that will automatically create a groovy script you can run to create your graph database schema.
 
-You can also instruct Goblinoid to create graph database indexes for you automatically from source code. The only thing you need to do is to provide type-safe definition of indexes. See below for more info.
-
 Installation
 ============
 
@@ -55,7 +53,3 @@ It is **recommended** to also provide the ``--schema-vertex-identifier`` option.
 
 By default, Goblinoid disables JanusGraph's schema maker. It is **recommended** having the schema maker disabled so all vertexes and edges that are added to the graph database respect the provided schema and there are not created additional schema entries. You can avoid this behaviour by specifying the ``--keep-schema-maker`` flag. See the `official documentation <http://docs.janusgraph.org/0.2.0/schema.html#_automatic_schema_maker>`_ for more info.
 
-Usage - Creating indexes
-========================
-
-TBD.
