@@ -45,7 +45,7 @@ setup(
     description='Create a graph database schema and indexes from source code automatically',
     long_description=get_long_description(),
     url='https://github.com/fridex/goblinoid',
-    license='GPLv2',
+    license='GPLv3',
     keywords='graph graph-database graph-db janusgraph tinkerpop gremlin gremlin-server',
     classifiers=[
         "Development Status :: 4 - Beta",
