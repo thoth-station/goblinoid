@@ -19,6 +19,6 @@
 
 __title__ = "goblinoid"
 __author__ = "Fridolin Pokorny"
-__version__ = "0.0.1"
+__version__ = "0.1.0"
 
 from .create import create_schema
