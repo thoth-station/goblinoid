@@ -2,3 +2,4 @@ goblin
 click
 daiquiri
 gremlinpython
+yarl<1.2
