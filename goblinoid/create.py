@@ -204,13 +204,13 @@ def create_schema(
 
         output.write(
             f"if (mgmt.getPropertyKey('__label__') == null)\n"
-            f"  mgmt.makePropertyKey('__label__').dataType({property_type})"
+            f"  mgmt.makePropertyKey('__label__').dataType(String.class)"
             f".cardinality(Cardinality.SINGLE).make()\n\n"
         )
 
         output.write(
             f"if (mgmt.getPropertyKey('__type__') == null)\n"
-            f"  mgmt.makePropertyKey('__type__').dataType({property_type})"
+            f"  mgmt.makePropertyKey('__type__').dataType(String.class)"
             f".cardinality(Cardinality.SINGLE).make()\n\n"
         )
 
