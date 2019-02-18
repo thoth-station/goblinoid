@@ -19,6 +19,7 @@
 
 import logging
 import typing
+import operator
 
 from goblin.element import Edge
 from goblin.element import Vertex
@@ -155,7 +156,7 @@ def create_schema(
     with open(output_file, "w") as output:
         output.write("mgmt = graph.openManagement()\n\n")
 
-        for vertex_label in vertex_labels.keys():
+        for vertex_label in sorted(vertex_labels.keys()):
             output.write(
                 f"if (mgmt.getVertexLabel('{vertex_label}') == null)\n"
                 f"  mgmt.makeVertexLabel('{vertex_label}').make()\n"
@@ -163,7 +164,7 @@ def create_schema(
 
         output.write("\n")
 
-        for edge_label in edge_labels.keys():
+        for edge_label in sorted(edge_labels.keys()):
             output.write(
                 f"if (mgmt.getEdgeLabel('{edge_label}') == null)\n"
                 f"  mgmt.makeEdgeLabel('{edge_label}').make()\n"
@@ -171,7 +172,7 @@ def create_schema(
 
         output.write("\n")
 
-        for property_db_name, property_instances in properties.items():
+        for property_db_name, property_instances in sorted(properties.items(), key=operator.itemgetter(0)):
             property_type = _get_property_type(property_instances[0])
             property_cardinality = None
             if isinstance(property_instances[0], VertexProperty):
