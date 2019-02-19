@@ -75,11 +75,11 @@ def _get_property_type(
 def _get_property_cardinality(property_instance: Cardinality) -> str:
     """Convert Goblin's cardinality enum to its representation in Gremlin's groovy shell."""
     if property_instance.cardinality == Cardinality.single:
-        return "Cardinality.SINGLE"
+        return "org.janusgraph.core.Cardinality.SINGLE"
     elif property_instance.cardinality == Cardinality.set_:
-        return "Cardinality.SET"
+        return "org.janusgraph.core.Cardinality.SET"
     elif property_instance.cardinality == Cardinality.list_:
-        return "Cardinality.LIST"
+        return "org.janusgraph.core.Cardinality.LIST"
     else:
         raise UnsupportedPropertyCardinality(
             f"Cardinality type {type(property_instance.cardinality)} is not supported"
