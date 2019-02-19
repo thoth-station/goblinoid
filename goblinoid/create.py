@@ -37,6 +37,19 @@ from .utils import get_iterable_from_module
 
 
 _LOGGER = logging.getLogger(__name__)
+_FILE_PREPEND = """// Automatically generated file by Goblinoid.
+
+:remote connect tinkerpop.server conf/remote.yaml session
+:remote console
+
+
+mgmt = graph.openManagement()
+
+"""
+
+_FILE_APPEND = """
+mgmt.commit()
+"""
 
 _SUPPORTED_PROPERTY_TYPES = {
     # In most cases we could just concatenate as the naming seems to be compatible, but let keep this extensible.
@@ -90,6 +103,7 @@ def create_schema(
     module_import: str,
     models_iterable: str,
     output_file: str,
+    index_file: str = None,
 ) -> None:
     """Create a graph database schema.
 
@@ -154,20 +168,21 @@ def create_schema(
             properties[db_name] = properties.get(db_name, []) + [property_instance]
 
     with open(output_file, "w") as output:
-        output.write("mgmt = graph.openManagement()\n\n")
-
+        output.write(_FILE_PREPEND)
         for vertex_label in sorted(vertex_labels.keys()):
             output.write(
-                f"if (mgmt.getVertexLabel('{vertex_label}') == null)\n"
-                f"  mgmt.makeVertexLabel('{vertex_label}').make()\n"
+                f"{vertex_label}_vl = mgmt.getVertexLabel('{vertex_label}')\n"
+                f"if ({vertex_label}_vl == null)\n"
+                f"  {vertex_label}_vl = mgmt.makeVertexLabel('{vertex_label}').make()\n\n"
             )
 
         output.write("\n")
 
         for edge_label in sorted(edge_labels.keys()):
             output.write(
-                f"if (mgmt.getEdgeLabel('{edge_label}') == null)\n"
-                f"  mgmt.makeEdgeLabel('{edge_label}').make()\n"
+                f"{edge_label}_el = mgmt.getEdgeLabel('{edge_label}')\n"
+                f"if ({edge_label}_el == null)\n"
+                f"  {edge_label}_el = mgmt.makeEdgeLabel('{edge_label}').make()\n\n"
             )
 
         output.write("\n")
@@ -196,23 +211,33 @@ def create_schema(
                         raise ValueError
 
             output.write(
-                f"if (mgmt.getPropertyKey('{property_db_name}') == null)\n"
-                f"  mgmt.makePropertyKey('{property_db_name}').dataType({property_type})"
+                f"{property_db_name}_p = mgmt.getPropertyKey('{property_db_name}')\n"
+                f"if ({property_db_name}_p == null)\n"
+                f"  {property_db_name}_p = mgmt.makePropertyKey('{property_db_name}').dataType({property_type})"
             )
             if property_cardinality:
                 output.write(f".cardinality({property_cardinality})")
             output.write(f".make()\n\n")
 
         output.write(
-            f"if (mgmt.getPropertyKey('__label__') == null)\n"
-            f"  mgmt.makePropertyKey('__label__').dataType(String.class)"
-            f".cardinality(Cardinality.SINGLE).make()\n\n"
+            "lbl = mgmt.getPropertyKey('__label__')\n"
+            "if (lbl == null)\n"
+            "  lbl = mgmt.makePropertyKey('__label__').dataType(String.class)"
+            f".cardinality(org.janusgraph.core.Cardinality.SINGLE).make()\n\n"
         )
 
         output.write(
-            f"if (mgmt.getPropertyKey('__type__') == null)\n"
-            f"  mgmt.makePropertyKey('__type__').dataType(String.class)"
-            f".cardinality(Cardinality.SINGLE).make()\n\n"
+            "type = mgmt.getPropertyKey('__type__')\n"
+            "if (type == null)\n"
+            "  type = mgmt.makePropertyKey('__type__').dataType(String.class)"
+            f".cardinality(org.janusgraph.core.Cardinality.SINGLE).make()\n\n"
         )
 
-        output.write("\nmgmt.commit()\n")
+        if index_file:
+            _LOGGER.info("Adding indexes from file %r", index_file)
+            with open(index_file, 'r') as index_definitions:
+                output.write("//\n// Indexes defined for the schema.\n//\n\n")
+                output.write(index_definitions.read())
+
+        output.write(_FILE_APPEND)
+
