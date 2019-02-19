@@ -64,12 +64,20 @@ def _print_version(ctx, _, value):
     help="A name of iterable that holds all models defined.",
 )
 @click.option(
-    "--schema-file",
+    "--output-file",
+    "-o",
     type=click.File(mode="w"),
     required=False,
-    default="./schema.groovy",
+    default="./init.groovy",
     show_default=True,
-    help="Define a name and path of the resulting schema.",
+    help="Define a name and path of the resulting file.",
+)
+@click.option(
+    "--index-file",
+    type=click.File(mode="r"),
+    required=False,
+    default=None,
+    help="A path to index file to be used to append indexes the resulting file.",
 )
 def cli(
     ctx=None,
@@ -78,7 +86,8 @@ def cli(
     models_iterable=None,
     keep_schema_maker=False,
     schema_vertex_identifier=None,
-    schema_file=None,
+    output_file=None,
+    index_file=None,
 ):
     """Create graph database schema automatically from source code."""
     if ctx:
@@ -89,11 +98,12 @@ def cli(
         _LOGGER.debug("Debug mode turned on")
         _LOGGER.debug(f"Passed options: {locals()}")
 
-    _LOGGER.info(f"Creating schema, writing result into {schema_file.name}")
+    _LOGGER.info(f"Creating schema, writing result into {output_file.name}")
     create_schema(
         module_import,
         models_iterable,
-        schema_file.name,
+        output_file.name,
+        index_file.name if index_file else None,
     )
 
 
